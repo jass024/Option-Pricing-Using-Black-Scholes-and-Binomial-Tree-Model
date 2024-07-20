@@ -96,7 +96,7 @@ Contributions are welcome! Follow these steps:
 
 ## License 📄
 
-This project is licensed under the GNU License. See the LICENSE file for details.
+This project is licensed under the [GNU GPL-3.0](https://www.gnu.org/licenses/) License. See the LICENSE file for details.
 
 ## Contact 📬
 
