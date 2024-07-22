@@ -1,5 +1,10 @@
-# Option-Pricing-Using-Black-Scholes-and-Binomial-Tree-Model 🎯
-Comparison of Black-Scholes model and the Binomial Tree model in terms of option pricing.
+
+
+<h1 align="center" id="title">Option Pricing Using Black Scholes and Binomial Tree Model</h1>
+
+<p align="center"><img src="https://socialify.git.ci/jass024/Option-Pricing-Using-Black-Scholes-and-Binomial-Tree-Model/image?font=Source%20Code%20Pro&amp;language=1&amp;name=1&amp;pattern=Solid&amp;theme=Dark" alt="project-image"></p>
+
+
 
 
 ## Overview 📈
