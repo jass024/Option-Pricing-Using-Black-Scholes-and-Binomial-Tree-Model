@@ -8,7 +8,7 @@ from bokeh.layouts import gridplot
 from bokeh.models import HoverTool, ColorBar, LinearColorMapper, ColumnDataSource
 from bokeh.io import output_notebook
 
-# Set the PYTHONPATH to the root directory
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from src.black_scholes import black_scholes_price
@@ -17,11 +17,10 @@ from src.utils import load_option_data, calculate_greeks, calculate_implied_vola
 from src.volatility_surface import generate_volatility_surface
 from src.api_integration import fetch_market_data
 
-# Provide your API key and the stock symbol
-api_key = 'O759BZZDY3HB5UMN'
-symbol = 'AAPL'
 
-# Ensure the data directory exists
+api_key = #'your api token'
+symbol = #'desired stock symbol'
+
 script_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(script_dir, 'data')
 if not os.path.exists(data_dir):
@@ -30,15 +29,13 @@ if not os.path.exists(data_dir):
 else:
     print(f"Directory already exists: {data_dir}")
 
-# Fetch market data and save to CSV
+
 csv_path = fetch_market_data(api_key, symbol)
 print(f"Market data saved to {csv_path}")
-
-# Load and preprocess option data
 option_data = load_option_data(symbol)
-print(f"Option data loaded: {option_data.head()}")  # Print the first few rows to check
+print(f"Option data loaded: {option_data.head()}")  
 
-# Calculate option prices
+
 option_data['BS_Price'] = option_data.apply(
     lambda row: black_scholes_price(
         S=row['close'],
@@ -49,11 +46,8 @@ option_data['BS_Price'] = option_data.apply(
         option_type=row['option_type']
     ), axis=1
 )
-
-# Ensure BS_Price column is calculated
 print(f"BS_Price column added: {option_data[['BS_Price']].head()}")
 
-# Calculate option prices using Binomial Tree model
 option_data['BT_Price'] = option_data.apply(
     lambda row: binomial_tree_price(
         S=row['close'],
@@ -64,29 +58,19 @@ option_data['BT_Price'] = option_data.apply(
         option_type=row['option_type']
     ), axis=1
 )
-
-# Ensure BT_Price column is calculated
 print(f"BT_Price column added: {option_data[['BT_Price']].head()}")
 
-# Calculate Greeks and Implied Volatility
+
 option_data = calculate_greeks(option_data)
 option_data = calculate_implied_volatility(option_data)
-
-# Ensure Greeks and Implied Volatility are calculated
 print(f"Option data with Greeks and Implied Volatility: {option_data[['implied_volatility', 'delta', 'gamma', 'theta', 'vega', 'rho']].head()}")
 
-# Generate volatility surface
+
 grid_x, grid_y, grid_z = generate_volatility_surface(option_data)
-
-# Calculate the absolute percentage difference between BS_Price and BT_Price
 option_data['Price_Difference_Percent'] = abs((option_data['BS_Price'] - option_data['BT_Price']) / option_data['BS_Price']) * 100
-
-# Calculate the average percentage difference
 average_difference_percent = option_data['Price_Difference_Percent'].mean()
-
 print(f"The average difference between the Black-Scholes price and the Binomial Tree price is {average_difference_percent:.2f}%")
 
-# Save the processed data for future use
 output_path = os.path.join(data_dir, f'{symbol}_processed_option_data.csv')
 print(f"Saving processed option data to {output_path}")
 
@@ -96,9 +80,6 @@ try:
 except PermissionError as e:
     print(f"Permission error: {e}")
 
-# Interactive plot with Bokeh
-
-# Option Prices Comparison Plot
 source1 = ColumnDataSource(data=dict(
     index=option_data.index,
     BS_Price=option_data['BS_Price'],
@@ -120,7 +101,7 @@ p1.xaxis.axis_label = "Date"
 p1.yaxis.axis_label = "Option Price"
 p1.legend.location = "top_left"
 
-# Volatility Surface Plot
+
 hover2 = HoverTool(tooltips=[
     ("Strike Price", "$x"),
     ("Time to Expiry", "$y"),
@@ -136,7 +117,7 @@ p2.yaxis.axis_label = "Time to Expiry"
 color_bar = ColorBar(color_mapper=mapper, location=(0, 0))
 p2.add_layout(color_bar, 'right')
 
-# Price Difference Percentage Plot
+
 source3 = ColumnDataSource(data=dict(
     index=option_data.index,
     Price_Difference_Percent=option_data['Price_Difference_Percent']
@@ -154,10 +135,9 @@ p3.xaxis.axis_label = "Date"
 p3.yaxis.axis_label = "Price Difference Percentage (%)"
 p3.legend.location = "top_left"
 
-# Arrange plots in a grid
+
 grid = gridplot([[p1], [p2], [p3]])
 
-# Save and show the plots
 output_file(os.path.join(data_dir, f'{symbol}_interactive_plots.html'))
 save(grid)
 show(grid)
